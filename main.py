@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class OrbitalParadox():
     """
     Class used to describe Orbital Paradox
@@ -30,7 +29,14 @@ class OrbitalParadox():
 
 
     def __init__(self):
-        pass
+        #? Starting height of the satelite
+        self.h0 = 20_000 #m
+
+        #? Starting orbital speed of the satelite
+        self.vx0 = np.sqrt(C_GAMMA * C_M_EARTH * (C_R_EARTH + self.h0))
+
+
+
 
 
 
