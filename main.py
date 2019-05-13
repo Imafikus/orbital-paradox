@@ -35,22 +35,22 @@ class OrbitalParadox():
 
     def __init__(self):
         #? Starting time
-        self.T = 0
+        self.T = 0.
 
         #? time step
-        self.dt = 10000 #s
+        self.dt = 10000. #s
         
         #? Starting x coordinate of the satelite
-        self.x = 0
+        self.x = 0.
 
         #? Starting height of the satelite (y coordinate)
-        self.y = 20_000 #m
+        self.y = 20_000. #m
 
         #? Starting orbital speed of the satelite (x component of the speed)
         self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
         
         #? starting y component of the speed
-        self.vy = 0
+        self.vy = 0.
 
         #? Starting speed
         self.v = self.vx + self.vy
@@ -62,6 +62,13 @@ class OrbitalParadox():
 
         Function returns 2 arrays. One for the height change, second with the time stamps
         """
+        print("Before loop")
+        print("self.y: ", self.y)
+        print("self.x: ", self.x)
+        print("C_GAMMA", self.C_GAMMA)
+        print("C_M_EARTH", self.C_M_EARTH)
+
+
         heights = []
         time_stamps = []
 
@@ -69,25 +76,35 @@ class OrbitalParadox():
             print("Time passed:", self.T)
             
             #? Calculate current gravitational acceleration 
-            ay = -self.C_GAMMA * self.C_M_EARTH* (self.x**2 + self.y**2)**(-3 / 2) * self.y
+            ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y
             
+            print("ay: ", ay)
             #? Update y coordinate and y-axis speed component
             self.y = self.y  + ay * (self.dt**2 / 2)
             self.vy = self.vy + ay * self.dt
+
+            print("self.y: ", self.y)
+            print("self.vy: ", self.vy)
+
 
             #? Update x coordinate and x-axis speed component
             self.x = self.x + self.vx * self.dt
             self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
 
+            print("self.x: ", self.x)
+            print("self.vx: ", self.vx)
+
             #? Calculate current atmosphere density
-            e_coef = (-self.y / self.C_H)
             Ro = self.C_Ro * self.C_Euler ** e_coef
+            print("Ro: ", Ro)
 
             #? Calculate Drag force
             Fd = 1/2 * Ro * self.v**2 * self.C_Cd * self.C_Area
+            print("Fd: ", Fd)
 
             #? Calculate current speed and apply drag force
             v = self.vx + self.vy - Fd * self.dt
+            print("v: ", v)
 
             self.T = self.T + self.dt
 
