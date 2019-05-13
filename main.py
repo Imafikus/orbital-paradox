@@ -27,19 +27,89 @@ class OrbitalParadox():
     #? Gravitational Constant
     C_GAMMA = 6.67e-11
 
+    #? Euler constant
+    C_Euler = 2.71828
+
+    C_SECONDS_IN_YEAR = 365 * 86_400
+
 
     def __init__(self):
-        #? Starting height of the satelite
-        self.h0 = 20_000 #m
+        #? Starting time
+        self.T = 0
 
-        #? Starting orbital speed of the satelite
-        self.vx0 = np.sqrt(C_GAMMA * C_M_EARTH * (C_R_EARTH + self.h0))
+        #? time step
+        self.dt = 10000 #s
+        
+        #? Starting x coordinate of the satelite
+        self.x = 0
 
+        #? Starting height of the satelite (y coordinate)
+        self.y = 20_000 #m
 
+        #? Starting orbital speed of the satelite (x component of the speed)
+        self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
+        
+        #? starting y component of the speed
+        self.vy = 0
 
+        #? Starting speed
+        self.v = self.vx + self.vy
 
+    def main_loop(self, end_time):
+        """
+        Calculates the trajectory of a satelite in 2D space.
+        Simulation is run until end_time is achieved.
 
+        Function returns 2 arrays. One for the height change, second with the time stamps
+        """
+        heights = []
+        time_stamps = []
+
+        while(self.T < end_time):
+            print("Time passed:", self.T)
+            
+            #? Calculate current gravitational acceleration 
+            ay = -self.C_GAMMA * self.C_M_EARTH* (self.x**2 + self.y**2)**(-3 / 2) * self.y
+            
+            #? Update y coordinate and y-axis speed component
+            self.y = self.y  + ay * (self.dt**2 / 2)
+            self.vy = self.vy + ay * self.dt
+
+            #? Update x coordinate and x-axis speed component
+            self.x = self.x + self.vx * self.dt
+            self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
+
+            #? Calculate current atmosphere density
+            e_coef = (-self.y / self.C_H)
+            Ro = self.C_Ro * self.C_Euler ** e_coef
+
+            #? Calculate Drag force
+            Fd = 1/2 * Ro * self.v**2 * self.C_Cd * self.C_Area
+
+            #? Calculate current speed and apply drag force
+            v = self.vx + self.vy - Fd * self.dt
+
+            self.T = self.T + self.dt
+
+            time_stamps.append(self.T)
+            heights.append(self.y)
+        
+        self._plot_2D(time_stamps, heights)
+    
+    
+    def _plot_2D(self, time, height):
+        """
+        Plots the 2D graph
+        """
+        plt.plot(time, height)
+        plt.axis('equal')
+        plt.show()
+
+def main():
+    op = OrbitalParadox()
+    print(OrbitalParadox.C_SECONDS_IN_YEAR)
+    op.main_loop(OrbitalParadox.C_SECONDS_IN_YEAR)
 
 
 if __name__ == "__main__":
-    op = OrbitalParadox()
+    main()
