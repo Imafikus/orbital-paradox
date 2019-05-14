@@ -44,7 +44,10 @@ class OrbitalParadox():
         self.x = 0.
 
         #? Starting height of the satelite (y coordinate)
-        self.y = 20_000. #m
+        self.h = 20_000 #m
+
+        #? Starting distance from the center of the Earth 
+        self.y = self.h + self.C_R_EARTH #m
 
         #? Starting orbital speed of the satelite (x component of the speed)
         self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
@@ -94,6 +97,7 @@ class OrbitalParadox():
             print("self.x: ", self.x)
             print("self.vx: ", self.vx)
 
+            e_coef = -(self.h / self.C_H)
             #? Calculate current atmosphere density
             Ro = self.C_Ro * self.C_Euler ** e_coef
             print("Ro: ", Ro)
