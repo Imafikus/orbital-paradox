@@ -16,7 +16,7 @@ class OrbitalParadox():
     C_Area = 10 * 3 #m2
 
     #? Starting height, used for calculating changing density of the atmosphere
-    C_H = 10_000 #m
+    C_H = 8_500 #m
 
     #? Mass of the Earth
     C_M_EARTH =  5.972 * 10**24 #kg
@@ -44,7 +44,7 @@ class OrbitalParadox():
         self.x = 0.
 
         #? Starting height of the satelite (y coordinate)
-        self.h = 20_000 #m
+        self.h = 200_000 #m
 
         #? Starting distance from the center of the Earth 
         self.y = self.h + self.C_R_EARTH #m
@@ -78,36 +78,38 @@ class OrbitalParadox():
         while(self.T < end_time):
             print("Time passed:", self.T)
             
-            #? Calculate current gravitational acceleration 
-            ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y
-            
-            print("ay: ", ay)
-            #? Update y coordinate and y-axis speed component
-            self.y = self.y  + ay * (self.dt**2 / 2)
-            self.vy = self.vy + ay * self.dt
-
-            print("self.y: ", self.y)
-            print("self.vy: ", self.vy)
-
-
-            #? Update x coordinate and x-axis speed component
-            self.x = self.x + self.vx * self.dt
-            self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
-
-            print("self.x: ", self.x)
-            print("self.vx: ", self.vx)
-
             e_coef = -(self.h / self.C_H)
             #? Calculate current atmosphere density
             Ro = self.C_Ro * self.C_Euler ** e_coef
             print("Ro: ", Ro)
 
-            #? Calculate Drag force
-            Fd = 1/2 * Ro * self.v**2 * self.C_Cd * self.C_Area
+            #? Calculate Drag force without the velocity
+            Fd = 1/2 * Ro * self.C_Cd * self.C_Area
             print("Fd: ", Fd)
 
-            #? Calculate current speed and apply drag force
-            v = self.vx + self.vy - Fd * self.dt
+            #? Calculate current gravitational acceleration 
+            ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
+            ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vx
+
+            print("ay: ", ay)
+            print("ax: ", ax)
+            
+            #? Update y coordinate and y-axis speed component
+            self.y = self.y + ay * (self.dt**2 / 2)
+            self.vy = self.vy + ay * self.dt
+
+            print("self.y: ", self.y)
+            print("self.vy: ", self.vy)
+
+            #? Update x coordinate and x-axis speed component
+            self.x = self.x + ax * (self.dt**2 / 2)
+            self.vx = self.vx + ax * self.dt
+            
+            print("self.x: ", self.x)
+            print("self.vx: ", self.vx)
+
+            #? Calculate current speed
+            v = self.vx + self.vy
             print("v: ", v)
 
             self.T = self.T + self.dt
@@ -115,6 +117,7 @@ class OrbitalParadox():
             time_stamps.append(self.T)
             heights.append(self.y)
         
+        #! FIXME
         self._plot_2D(time_stamps, heights)
     
     
