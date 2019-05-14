@@ -87,9 +87,8 @@ class OrbitalParadox():
             Fd = 1/2 * Ro * self.C_Cd * self.C_Area
             print("Fd: ", Fd)
 
-            #? Calculate current gravitational acceleration 
             ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
-            ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vx
+            ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.x - Fd * self.vx
 
             print("ay: ", ay)
             print("ax: ", ax)
@@ -114,8 +113,10 @@ class OrbitalParadox():
 
             self.T = self.T + self.dt
 
+            distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
+
             time_stamps.append(self.T)
-            heights.append(self.y)
+            heights.append(distance)
         
         #! FIXME
         self._plot_2D(time_stamps, heights)
@@ -126,12 +127,13 @@ class OrbitalParadox():
         Plots the 2D graph
         """
         plt.plot(time, height)
-        plt.axis('equal')
+        #plt.axis('equal')
+        plt.xlabel("time (s)")
+        plt.ylabel("height (m)")
         plt.show()
 
 def main():
     op = OrbitalParadox()
-    print(OrbitalParadox.C_SECONDS_IN_YEAR)
     op.main_loop(OrbitalParadox.C_SECONDS_IN_YEAR)
 
 
