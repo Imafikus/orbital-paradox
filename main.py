@@ -62,8 +62,11 @@ class OrbitalParadox():
         #? Starting speed
         self.v = self.vx + self.vy
 
+        #? tracks the current height and current time
         self.heights = []
         self.time_stamps = []
+        
+        #? tracks the current coordinates of the satelite
         self.xs = []
         self.ys = []
 
@@ -77,31 +80,18 @@ class OrbitalParadox():
         xs, ys are the coordinates of the satelite
         time_stamps and heights are current time and height of the satelite
 
-        adjust_height indicates if satelite need to speed up, in order not to fall
+        adjust_height indicates if satelite speeds up, in order not to fall
+        
+        adjust_height defaluts to false, we only need to explicitly state that 
+        we want do height adjustment
         """
-        print("Before loop")
-        print("self.y: ", self.y)
-        print("self.x: ", self.x)
-        print("C_GAMMA", self.C_GAMMA)
-        print("C_M_EARTH", self.C_M_EARTH)
-
+        
         distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
         print("distance: ", distance)
-        print("critical height: ", self.C_CRITICAL_HEIGHT)
+
+        speed_adjustment = 0
 
         while(self.T < end_time):
-            
-            speed_was_adjusted = False
-            if distance < self.C_CRITICAL_HEIGHT and adjust_height:
-                print("Speed adjusted")
-                self.v = self.v + 300
-                speed_was_adjusted = True
-
-            #? If we have hit the surface, we don't want to run simulation anymore
-            if distance < 0 and not speed_was_adjusted:
-                break
-
-            print("Time passed:", self.T)
             
             e_coef = -(self.h / self.C_H)
             #? Calculate current atmosphere density
@@ -122,21 +112,22 @@ class OrbitalParadox():
             self.y = self.y + self.vy * self.dt + ay * (self.dt**2 / 2)
             self.vy = self.vy + ay * self.dt
 
-            print("self.y: ", self.y)
-            print("self.vy: ", self.vy)
-
             #? Update x coordinate and x-axis speed component
             self.x = self.x + self.vx * self.dt + ax * (self.dt**2 / 2)
             self.vx = self.vx + ax * self.dt
-            
-            print("self.x: ", self.x)
-            print("self.vx: ", self.vx)
 
-            #? Calculate current speed
+            #!FIXME#? Calculate current speed
+            # if distance < self.C_CRITICAL_HEIGHT and adjust_height:
+            #     self.vy = self.vy + self.C_SPEED_ADJUSTMENT
+
             v = self.vx + self.vy
-            print("v: ", v)
 
             self.T = self.T + self.dt
+
+                
+            #? If we have hit the surface, we don't want to run simulation anymore
+            if distance < 0 :
+                break
 
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
             print("distance: ", distance)
@@ -147,11 +138,10 @@ class OrbitalParadox():
             self.xs.append(self.x)
             self.ys.append(self.y)
         
-        #self._plot_coordinates(xs, ys)
     
     def reset_arrays(self):
         """
-        Reset arrays all arrays to be empty
+        Resets arrays all arrays to be empty
         """
         self.heights = []
         self.time_stamps = []
@@ -160,7 +150,7 @@ class OrbitalParadox():
     
     def get_coordinates_arrays(self):
         """
-        returns arrays for x and y coordinates of the satelite
+        Returns arrays for x and y coordinates of the satelite
         """
         return self.xs, self.ys
 
@@ -169,8 +159,6 @@ class OrbitalParadox():
         """
         Plots the position of the satelite  
         """
-        #plt.xkcd()
-        #plt.axis('equal')
         plt.plot(self.xs, self.ys)
         plt.xlabel("x")
         plt.ylabel("y")
@@ -185,18 +173,34 @@ class OrbitalParadox():
         plt.xlabel("time (s)")
         plt.ylabel("height (m)")
         plt.show()
-    
+
+    def print_values():
+        """
+        Used to print all values of the variables which are used
+        in the main loop function
+        """    
+        print("Time passed:", self.T)
+        
+        print("self.y: ", self.y)
+        print("self.vy: ", self.vy)
+        
+        print("self.x: ", self.x)
+        print("self.vx: ", self.vx)
+
+
+
 
 def main():
     op = OrbitalParadox()
     time_period = op.C_SECONDS_IN_YEAR
-    print(time_period)
     
-    op.main_loop(10_000, True)
+    op.main_loop(time_period, False)
     
     op.plot_coordinates()
     op.plot_height_through_time()
 
+    x, y = op.get_coordinates_arrays()
+    print(x, y)
 
 if __name__ == "__main__":
     main()
