@@ -22,7 +22,7 @@ class OrbitalParadox():
     C_M_EARTH =  5.972 * 10**24 #kg
 
     #? Radius of the earth
-    C_R_EARTH = 6.371 * 10**6 #m
+    C_R_EARTH = 6_371_000.#m
 
     #? Gravitational Constant
     C_GAMMA = 6.67e-11
@@ -31,6 +31,9 @@ class OrbitalParadox():
     C_Euler = 2.71828
 
     C_SECONDS_IN_YEAR = 365 * 86_400
+
+    #? indicates if the satelite needs height adjustment
+    C_CRITICAL_HEIGHT = 160_000.
 
 
     def __init__(self):
@@ -63,12 +66,17 @@ class OrbitalParadox():
         self.xs = []
         self.ys = []
 
-    def main_loop(self, end_time):
+    def main_loop(self, end_time, adjust_height = False):
         """
         Calculates the trajectory of a satelite in 2D space.
         Simulation is run until end_time is achieved.
 
-        Function returns 2 arrays. One for the height change, second with the time stamps
+        Function fills 4 arrays.
+
+        xs, ys are the coordinates of the satelite
+        time_stamps and heights are current time and height of the satelite
+
+        adjust_height indicates if satelite need to speed up, in order not to fall
         """
         print("Before loop")
         print("self.y: ", self.y)
@@ -77,9 +85,15 @@ class OrbitalParadox():
         print("C_M_EARTH", self.C_M_EARTH)
 
         distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
-
+        print("distance: ", distance)
+        print("critical height: ", self.C_CRITICAL_HEIGHT)
 
         while(self.T < end_time):
+            
+            if distance < self.C_CRITICAL_HEIGHT and adjust_height:
+                print("Speed adjusted")
+                self.v = self.v + 300
+                break
 
             #? If we have hit the surface, we don't want to run simulation anymore
             if distance < 0:
@@ -103,14 +117,14 @@ class OrbitalParadox():
             print("ax: ", ax)
             
             #? Update y coordinate and y-axis speed component
-            self.y = self.y + ay * (self.dt**2 / 2)
+            self.y = self.y + self.vy * self.dt + ay * (self.dt**2 / 2)
             self.vy = self.vy + ay * self.dt
 
             print("self.y: ", self.y)
             print("self.vy: ", self.vy)
 
             #? Update x coordinate and x-axis speed component
-            self.x = self.x + ax * (self.dt**2 / 2)
+            self.x = self.x + self.vx * self.dt + ax * (self.dt**2 / 2)
             self.vx = self.vx + ax * self.dt
             
             print("self.x: ", self.x)
@@ -123,6 +137,7 @@ class OrbitalParadox():
             self.T = self.T + self.dt
 
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
+            print("distance: ", distance)
 
             self.time_stamps.append(self.T)
             self.heights.append(distance)
@@ -172,7 +187,11 @@ class OrbitalParadox():
 
 def main():
     op = OrbitalParadox()
-    op.main_loop(OrbitalParadox.C_SECONDS_IN_YEAR)
+    time_period = op.C_SECONDS_IN_YEAR
+    print(time_period)
+    
+    op.main_loop(time_period, True)
+    
     op.plot_coordinates()
     op.plot_height_through_time()
 
