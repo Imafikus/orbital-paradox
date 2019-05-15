@@ -58,6 +58,11 @@ class OrbitalParadox():
         #? Starting speed
         self.v = self.vx + self.vy
 
+        self.heights = []
+        self.time_stamps = []
+        self.xs = []
+        self.ys = []
+
     def main_loop(self, end_time):
         """
         Calculates the trajectory of a satelite in 2D space.
@@ -70,12 +75,6 @@ class OrbitalParadox():
         print("self.x: ", self.x)
         print("C_GAMMA", self.C_GAMMA)
         print("C_M_EARTH", self.C_M_EARTH)
-
-
-        heights = []
-        time_stamps = []
-        xs = []
-        ys = []
 
         distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
 
@@ -125,28 +124,57 @@ class OrbitalParadox():
 
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
 
-            time_stamps.append(self.T)
-            xs.append(self.x)
-            ys.append(self.y)
-            heights.append(distance)
+            self.time_stamps.append(self.T)
+            self.heights.append(distance)
+            
+            self.xs.append(self.x)
+            self.ys.append(self.y)
         
-        self._plot_2D(time_stamps, heights, xs, ys)
+        #self._plot_coordinates(xs, ys)
     
+    def reset_arrays(self):
+        """
+        Reset arrays all arrays to be empty
+        """
+        self.heights = []
+        self.time_stamps = []
+        self.xs = []
+        self.ys = []
     
-    def _plot_2D(self, time, height, xs, ys):
+    def get_coordinates_arrays(self):
         """
-        Plots the 2D graph
+        returns arrays for x and y coordinates of the satelite
         """
-        plt.plot(time, height)
+        return self.xs, self.ys
+
+
+    def plot_coordinates(self):
+        """
+        Plots the position of the satelite  
+        """
+        #plt.xkcd()
         #plt.axis('equal')
-        #plt.plot(xs, ys)
+        plt.plot(self.xs, self.ys)
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.show()
+        
+
+    def plot_height_through_time(self):
+        """
+        Plots the height change through time
+        """ 
+        plt.plot(self.time_stamps, self.heights)
         plt.xlabel("time (s)")
         plt.ylabel("height (m)")
         plt.show()
+    
 
 def main():
     op = OrbitalParadox()
     op.main_loop(OrbitalParadox.C_SECONDS_IN_YEAR)
+    op.plot_coordinates()
+    op.plot_height_through_time()
 
 
 if __name__ == "__main__":
