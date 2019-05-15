@@ -7,7 +7,7 @@ class OrbitalParadox():
     """
 
     #? Air densisty
-    C_Ro = 1.23 #km/m3
+    C_Ro = 1.23 #kg/m3
 
     #? Drag coefficient for satelites
     C_Cd = 2.2
@@ -43,14 +43,14 @@ class OrbitalParadox():
         #? Starting x coordinate of the satelite
         self.x = 0.
 
-        #? Starting height of the satelite (y coordinate)
+        #? Starting height of the satelite (y coordinate) from the Earth surface
         self.h = 200_000 #m
 
         #? Starting distance from the center of the Earth 
         self.y = self.h + self.C_R_EARTH #m
 
         #? Starting orbital speed of the satelite (x component of the speed)
-        self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH * (self.C_R_EARTH + self.y))
+        self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH / (self.y))
         
         #? starting y component of the speed
         self.vy = 0.
@@ -74,8 +74,18 @@ class OrbitalParadox():
 
         heights = []
         time_stamps = []
+        xs = []
+        ys = []
+
+        distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
+
 
         while(self.T < end_time):
+
+            #? If we have hit the surface, we don't want to run simulation anymore
+            if distance < 0:
+                break
+
             print("Time passed:", self.T)
             
             e_coef = -(self.h / self.C_H)
@@ -116,18 +126,20 @@ class OrbitalParadox():
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
 
             time_stamps.append(self.T)
+            xs.append(self.x)
+            ys.append(self.y)
             heights.append(distance)
         
-        #! FIXME
-        self._plot_2D(time_stamps, heights)
+        self._plot_2D(time_stamps, heights, xs, ys)
     
     
-    def _plot_2D(self, time, height):
+    def _plot_2D(self, time, height, xs, ys):
         """
         Plots the 2D graph
         """
         plt.plot(time, height)
         #plt.axis('equal')
+        #plt.plot(xs, ys)
         plt.xlabel("time (s)")
         plt.ylabel("height (m)")
         plt.show()
