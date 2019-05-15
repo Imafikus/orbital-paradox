@@ -35,13 +35,14 @@ class OrbitalParadox():
     #? indicates if the satelite needs height adjustment
     C_CRITICAL_HEIGHT = 160_000.
 
+    C_SPEED_ADJUSTMENT = 1_000. #m/s
 
     def __init__(self):
         #? Starting time
         self.T = 0.
 
         #? time step
-        self.dt = 10000. #s
+        self.dt = 1. #s
         
         #? Starting x coordinate of the satelite
         self.x = 0.
@@ -90,13 +91,14 @@ class OrbitalParadox():
 
         while(self.T < end_time):
             
+            speed_was_adjusted = False
             if distance < self.C_CRITICAL_HEIGHT and adjust_height:
                 print("Speed adjusted")
                 self.v = self.v + 300
-                break
+                speed_was_adjusted = True
 
             #? If we have hit the surface, we don't want to run simulation anymore
-            if distance < 0:
+            if distance < 0 and not speed_was_adjusted:
                 break
 
             print("Time passed:", self.T)
@@ -106,8 +108,8 @@ class OrbitalParadox():
             Ro = self.C_Ro * self.C_Euler ** e_coef
             print("Ro: ", Ro)
 
-            #? Calculate Drag force without the velocity
-            Fd = 1/2 * Ro * self.C_Cd * self.C_Area
+            #? Calculate Drag force 
+            Fd = 1/2 * Ro * self.C_Cd * self.C_Area * np.sqrt(self.vx**2 + self.vy**2)
             print("Fd: ", Fd)
 
             ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
@@ -190,7 +192,7 @@ def main():
     time_period = op.C_SECONDS_IN_YEAR
     print(time_period)
     
-    op.main_loop(time_period, True)
+    op.main_loop(10_000, True)
     
     op.plot_coordinates()
     op.plot_height_through_time()
