@@ -218,9 +218,8 @@ def main():
     time_period = op.C_SECONDS_IN_YEAR
     op.main_loop(time_period, False)
     
-    #op.plot_coordinates()
-    #op.plot_height_through_time()
+    op.plot_coordinates()
+    op.plot_height_through_time()
 
-    
 if __name__ == "__main__":
     main()
