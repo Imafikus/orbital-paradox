@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pygame
 
 class OrbitalParadox():
     """
@@ -188,19 +189,75 @@ class OrbitalParadox():
         print("self.vx: ", self.vx)
 
 
+def arrays_scaled_to_fit_screen(positions_x, positions_y):
+    scaled_xs = []; scaled_ys = []
+    min_x = min(positions_x)
+    max_x = max(positions_x)
+    for value in positions_x:
+        scaled_xs.append(1280*(value-min_x)/(max_x-min_x))
+
+    min_y = min(positions_y)
+    max_y = max(positions_y)
+    for value in positions_y:
+        scaled_ys.append(720 - 720*(value-min_y)/(max_y-min_y))
+
+    return scaled_xs, scaled_ys
+        
+
+def compress_arrays(positions_x, positions_y):
+    compressed_xs = []; compressed_ys = []
+    i = 0
+    while i < len(positions_x):
+        compressed_xs.append(positions_x[i])
+        compressed_ys.append(positions_y[i])
+        i+=50
+
+    return compressed_xs, compressed_ys
+
 
 
 def main():
     op = OrbitalParadox()
     time_period = op.C_SECONDS_IN_YEAR
-    
     op.main_loop(time_period, False)
     
-    op.plot_coordinates()
-    op.plot_height_through_time()
+    #op.plot_coordinates()
+    #op.plot_height_through_time()
 
     x, y = op.get_coordinates_arrays()
-    print(x, y)
+    x, y = compress_arrays(x, y)
+    x, y = arrays_scaled_to_fit_screen(x, y)
+
+    pygame.init()
+    clock = pygame.time.Clock()
+
+    white = (255,255,255)
+    black = (0,0,0)
+
+    gameDisplay = pygame.display.set_mode((1280,720))
+    pygame.display.set_caption('Orbital paradox')
+
+    position_x = 0
+    position_y = 0
+
+    i = 0
+    gameExit = False
+    while not gameExit:
+        gameDisplay.fill(white)
+        pygame.draw.circle(gameDisplay, black, [position_x, position_y], 10)
+        i = (i + 1) % len(x)
+        position_x = int(x[i])
+        position_y = int(y[i])
+        # print('x:' + str(position_x))
+        # print('y:' + str(position_y))
+        pygame.display.update()
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gameExit = True
+
+    pygame.quit()
+    quit()
 
 if __name__ == "__main__":
     main()
