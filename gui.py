@@ -3,6 +3,16 @@ from tkinter import ttk
 
 class orbitalParadoxGui:
 
+    #? satellite surfaces approximations, all given in m2
+    SAT_SURFACES_DICT = {
+        "ISS": 74 * 110, 
+        "Hubble:": 13.2 * 4.2, 
+        "Voyager: ": 4 * 4,
+        "Space Horizon": 4
+    }
+    SAT_NAMES = ("ISS", "Hubble", "Voyager", "Space Horizon")
+
+
     def __init__(self):
         self.root = Tk()
         self.root.title("Orbital Paradox")
@@ -33,6 +43,16 @@ class orbitalParadoxGui:
         height_lbl.grid(row = 0, column = 0,  sticky = "nwse", padx = 5, pady = 5)
         height.grid(row = 0, column = 1,  sticky = "nwse", padx = 5, pady = 5)
 
+        #? satellite widget
+        satellites_lbl = ttk.Label(self.root, text = "Choose satellite for the simulation: ")        
+        self.satellite_txt = StringVar()
+        satellites = ttk.Combobox(self.root, textvariable = self.satellite_txt, state = "readonly")
+        satellites["values"] = self.SAT_NAMES
+        satellites.current(0)
+
+        satellites_lbl.grid(row = 2, column = 0,  sticky = "nwse", padx = 5, pady = 5)
+        satellites.grid(row = 2, column = 1,  sticky = "nwse", padx = 5, pady = 5)
+
         #? start button widget
         start_button = ttk.Button(self.root, text = "Start Simulation", command = self.start_simulation)
         start_button.grid(row = 5, rowspan = 2, column = 0, columnspan = 2, sticky = "nwse", padx = 5, pady = 5)
@@ -42,12 +62,13 @@ class orbitalParadoxGui:
     
     def start_simulation(self):
         """
-        Gets the params from the input and starts the simulation if the input is correct
+        Gets the params from the input fields and starts the simulation if the input is correct
         """
         print("start_simulation")
 
         print("height val: ", self.height_txt.get())
         print("time period: ", self.time_period_txt.get())
+        print("Satellite names: ", self.satellite_txt.get())
 
 
 if __name__ == "__main__":
