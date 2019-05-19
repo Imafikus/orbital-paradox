@@ -68,7 +68,10 @@ class orbitalParadoxGui:
 
         print("height val: ", self.height_txt.get())
         print("time period: ", self.time_period_txt.get())
-        print("Satellite names: ", self.satellite_txt.get())
+        
+        sat_name = self.satellite_txt.get()
+        print("Satellite name: ", sat_name)
+        print("Satellite surface: ", self.SAT_SURFACES_DICT[sat_name])
 
 
 if __name__ == "__main__":
