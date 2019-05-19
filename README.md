@@ -1,5 +1,6 @@
 # orbital-paradox
-Repo for my assignment for my introductory course in Mechanics 
+
+Repo for my assignment for my introductory course in Mechanics
 
 `run.py` contains the whole simulation
 
@@ -7,8 +8,11 @@ Repo for my assignment for my introductory course in Mechanics
 
 `op.py` contains all the calculations
 
+`gui.py` contains all GUI logic
+
 ## Dependencies
 
 - `numpy`
 - `matplotlib`
 - `pygame`
+- `tkinter`

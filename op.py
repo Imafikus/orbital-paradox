@@ -193,32 +193,6 @@ class OrbitalParadox():
         print("self.x: ", self.x)
         print("self.vx: ", self.vx)
 
-
-def arrays_scaled_to_fit_screen(positions_x, positions_y):
-    scaled_xs = []; scaled_ys = []
-    min_x = min(positions_x)
-    max_x = max(positions_x)
-    for value in positions_x:
-        scaled_xs.append(1280*(value-min_x)/(max_x-min_x))
-
-    min_y = min(positions_y)
-    max_y = max(positions_y)
-    for value in positions_y:
-        scaled_ys.append(720 - 720*(value-min_y)/(max_y-min_y))
-
-    return scaled_xs, scaled_ys
-        
-
-def compress_arrays(positions_x, positions_y):
-    compressed_xs = []; compressed_ys = []
-    i = 0
-    while i < len(positions_x):
-        compressed_xs.append(positions_x[i])
-        compressed_ys.append(positions_y[i])
-        i+=50
-
-    return compressed_xs, compressed_ys
-
 def main():
     op = OrbitalParadox()
     time_period = op.C_SECONDS_IN_YEAR / 500

@@ -10,15 +10,45 @@ class orbitalParadoxGui:
         self.make_layout()
 
     def make_layout(self):
-        height_lbl = ttk.Label(self.root, text = "Starting height of the satellite: ")
-        height_txt = StringVar()
-        height = ttk.Entry(self.root, textvariable = height_txt)
+        """"
+        Puts all the widgets in the grid and binds the functions to the correct actions
+        """
+
+        #? NOTE: all variables which are self.sth are that way on purpose, because 
+        #? we need to access that data in the start simulation function
+
+        #? time_period widget
+        time_period_lbl = ttk.Label(self.root, text = "Time period for the simulation (s): ")
+        self.time_period_txt = StringVar()
+        time_period = ttk.Entry(self.root, textvariable = self.time_period_txt)
+
+        time_period_lbl.grid(row = 1, column = 0,  sticky = "nwse", padx = 5, pady = 5)
+        time_period.grid(row = 1, column = 1,  sticky = "nwse", padx = 5, pady = 5)
         
+        #? height widget
+        height_lbl = ttk.Label(self.root, text = "Starting height of the satellite (m): ")
+        self.height_txt = StringVar()
+        height = ttk.Entry(self.root, textvariable = self.height_txt)
+
         height_lbl.grid(row = 0, column = 0,  sticky = "nwse", padx = 5, pady = 5)
         height.grid(row = 0, column = 1,  sticky = "nwse", padx = 5, pady = 5)
 
+        #? start button widget
+        start_button = ttk.Button(self.root, text = "Start Simulation", command = self.start_simulation)
+        start_button.grid(row = 5, rowspan = 2, column = 0, columnspan = 2, sticky = "nwse", padx = 5, pady = 5)
+
     def run(self):
         self.root.mainloop()
+    
+    def start_simulation(self):
+        """
+        Gets the params from the input and starts the simulation if the input is correct
+        """
+        print("start_simulation")
+
+        print("height val: ", self.height_txt.get())
+        print("time period: ", self.time_period_txt.get())
+
 
 if __name__ == "__main__":
     gui = orbitalParadoxGui()

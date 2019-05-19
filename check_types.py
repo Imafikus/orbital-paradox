@@ -94,14 +94,14 @@ def check_email(email):
         return check
 
     if len(before_at) == 0 or len(after_at) == 0:
-       check = False
-       return check
+        check = False
+        return check
     
     before_dot, after_dot = after_at.split(".")
     
     if len(before_dot) == 0 or len(after_dot) == 0:
-       check = False
-       return check
+        check = False
+        return check
     
     return check
 
