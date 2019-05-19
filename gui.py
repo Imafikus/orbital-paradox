@@ -77,3 +77,4 @@ class orbitalParadoxGui:
 if __name__ == "__main__":
     gui = orbitalParadoxGui()
     gui.run()
+    
