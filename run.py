@@ -3,8 +3,8 @@ from simulation import Simulation
 
 def main():    
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR
-    op.main_loop(time_period, False)
+    time_period = op.C_SECONDS_IN_YEAR / 500
+    op.main_loop(time_period, True, False)
 
     sim = Simulation()
 

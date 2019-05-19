@@ -26,6 +26,7 @@ class Simulation:
     def compress_arrays(self, positions_x, positions_y):
         """
         Reduces the arrays to better fit the screen
+        #TODO Needs better comments
         """
         compressed_xs = []; compressed_ys = []
         i = 0
@@ -55,8 +56,8 @@ class Simulation:
         i = 0
         simulationExit = False
         while not simulationExit:
-            gameDisplay.fill(white)
-            pygame.draw.circle(gameDisplay, black, [position_x, position_y], 10)
+            gameDisplay.fill(black)
+            pygame.draw.circle(gameDisplay, white, [position_x, position_y], 10)
             
             i = (i + 1) % len(x)
             

@@ -70,7 +70,7 @@ class OrbitalParadox():
         self.xs = []
         self.ys = []
 
-    def main_loop(self, end_time, adjust_height = False):
+    def main_loop(self, end_time, include_drag_force, adjust_height = False):
         """
         Calculates the trajectory of a satelite in 2D space.
         Simulation is run until end_time is achieved.
@@ -80,6 +80,9 @@ class OrbitalParadox():
         xs, ys are the coordinates of the satelite
         time_stamps and heights are current time and height of the satelite
 
+        include_drag_force just says whether we include the drag force, or not.
+        It must be stated everytime
+
         adjust_height indicates if satelite speeds up, in order not to fall
         
         adjust_height defaluts to false, we only need to explicitly state that 
@@ -87,7 +90,7 @@ class OrbitalParadox():
         """
         
         distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
-        print("distance: ", distance)
+        # print("distance: ", distance)
 
         speed_adjustment = 0
 
@@ -96,17 +99,20 @@ class OrbitalParadox():
             e_coef = -(self.h / self.C_H)
             #? Calculate current atmosphere density
             Ro = self.C_Ro * self.C_Euler ** e_coef
-            print("Ro: ", Ro)
+            # print("Ro: ", Ro)
 
             #? Calculate Drag force 
-            Fd = 1/2 * Ro * self.C_Cd * self.C_Area * np.sqrt(self.vx**2 + self.vy**2)
-            print("Fd: ", Fd)
+            if(include_drag_force == True):
+                Fd = 1/2 * Ro * self.C_Cd * self.C_Area * np.sqrt(self.vx**2 + self.vy**2)
+                # print("Fd: ", Fd)
+            else:
+                Fd = 0
 
             ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
             ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.x - Fd * self.vx
 
-            print("ay: ", ay)
-            print("ax: ", ax)
+            # print("ay: ", ay)
+            # print("ax: ", ax)
             
             #? Update y coordinate and y-axis speed component
             self.y = self.y + self.vy * self.dt + ay * (self.dt**2 / 2)
@@ -215,8 +221,8 @@ def compress_arrays(positions_x, positions_y):
 
 def main():
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR
-    op.main_loop(time_period, False)
+    time_period = op.C_SECONDS_IN_YEAR / 500
+    op.main_loop(time_period, False, False)
     
     op.plot_coordinates()
     op.plot_height_through_time()

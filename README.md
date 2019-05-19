@@ -10,5 +10,5 @@ Repo for my assignment for my introductory course in Mechanics
 ## Dependencies
 
 - `numpy`
-- `matplotlib` 
+- `matplotlib`
 - `pygame`
