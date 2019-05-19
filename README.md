@@ -19,7 +19,7 @@ Repo for my assignment for my introductory course in Mechanics
 
 ## Satellite sufraces links
 
-- (https://www.nasa.gov/pdf/179225main_ISS_Poster_Back.pdf)[ISS]
-- (http://hubblesite.org/the_telescope/hubble_essentials/quick_facts.php)[Hubble]
-- (https://en.wikipedia.org/wiki/Voyager_1)[Voyager]
-- (https://en.wikipedia.org/wiki/New_Horizons)[New Horizons]
+- [ISS](https://www.nasa.gov/pdf/179225main_ISS_Poster_Back.pdf)
+- [Hubble](http://hubblesite.org/the_telescope/hubble_essentials/quick_facts.php)
+- [Voyager](https://en.wikipedia.org/wiki/Voyager_1)
+- [New Horizons](https://en.wikipedia.org/wiki/New_Horizons)
