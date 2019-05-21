@@ -7,7 +7,7 @@ class Simulation:
     def __init__(self):
         pass
     
-    def arrays_scaled_to_fit_screen(self, positions_x, positions_y):
+    def scale_arrays_to_fit_screen(self, positions_x, positions_y):
         """
         First we normalize the array to fit the [0, 1] segment and then stretch it
         to fit our 1280x720 screen;
@@ -16,19 +16,22 @@ class Simulation:
         scaled_xs = []; scaled_ys = []
         min_x = min(positions_x)
         max_x = max(positions_x)
+
         for value in positions_x:
-            scaled_xs.append(1280 * (value-min_x) / (max_x-min_x))
+            scaled_xs.append(280 + 720 * (value-min_x) / (max_x-min_x))
 
         min_y = min(positions_y)
         max_y = max(positions_y)
         for value in positions_y:
             scaled_ys.append(720 - 720 * (value-min_y) / (max_y-min_y))
 
+        self.scaled_earth_radius = (720 - 360 * (6_371_000.-min_y) / (max_y-min_y)) / 2
+
         return scaled_xs, scaled_ys
     
     def compress_arrays(self, positions_x, positions_y):
         """
-        Reduces the arrays by preserving 1 out of every 4 frames
+        Reduces the arrays by preserving 1 out of every COMPRESSION_STEP frames
         """
         compressed_xs = []; compressed_ys = []
         i = 0
@@ -42,30 +45,31 @@ class Simulation:
     def start_loop(self, x, y):
         # Starts the simulation given the x and y arrays of coordinates
         pygame.init()
-        clock = pygame.time.Clock()
+        clock = pygame.time.Clock() # This is used to set the framerate
 
         white = (255,255,255)
         black = (0,0,0)
+        blue = (135,206,250)
 
         game_display = pygame.display.set_mode((1280,720))
         pygame.display.set_caption('Orbital paradox')
 
-        position_x = 0
-        position_y = 0
-
+        position_x = int(x[0])
+        position_y = int(y[0])
         i = 0
         simulation_exit = False
         while not simulation_exit:
             game_display.fill(black)
-            pygame.draw.circle(game_display, white, [position_x, position_y], 10)
+            pygame.draw.circle(game_display, white, [position_x, position_y], 10) # Satelite
+            pygame.draw.circle(game_display, blue, [640, 360], int(self.scaled_earth_radius)) # Planet
             
-            i = (i + 1) % len(x)
+            i = (i + 1) % len(x) # Loop through the x and y arrays
             
             position_x = int(x[i])
             position_y = int(y[i])
             
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(60) # Framerate set to 60fps
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
