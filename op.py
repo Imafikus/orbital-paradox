@@ -16,7 +16,7 @@ class OrbitalParadox():
     C_Area = 10 * 3 #m2
 
     #? Starting height, used for calculating changing density of the atmosphere
-    C_H = 8_500 #m
+    C_H = 5_500 #m
 
     #? Mass of the Earth
     C_M_EARTH =  5.972 * 10**24 #kg
@@ -69,6 +69,7 @@ class OrbitalParadox():
         #? tracks the current coordinates of the satelite
         self.xs = []
         self.ys = []
+        self.speed = []
 
     def main_loop(self, end_time, include_drag_force, adjust_height = False):
         """
@@ -99,20 +100,15 @@ class OrbitalParadox():
             e_coef = -(self.h / self.C_H)
             #? Calculate current atmosphere density
             Ro = self.C_Ro * self.C_Euler ** e_coef
-            # print("Ro: ", Ro)
 
             #? Calculate Drag force 
             if(include_drag_force == True):
                 Fd = 1/2 * Ro * self.C_Cd * self.C_Area * np.sqrt(self.vx**2 + self.vy**2)
-                # print("Fd: ", Fd)
             else:
                 Fd = 0
 
             ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
             ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.x - Fd * self.vx
-
-            # print("ay: ", ay)
-            # print("ax: ", ax)
             
             #? Update y coordinate and y-axis speed component
             self.y = self.y + self.vy * self.dt + ay * (self.dt**2 / 2)
@@ -127,12 +123,14 @@ class OrbitalParadox():
             #     self.vy = self.vy + self.C_SPEED_ADJUSTMENT
 
             v = self.vx + self.vy
+            self.speed.append(v)
 
             self.T = self.T + self.dt
-
                 
             #? If we have hit the surface, we don't want to run simulation anymore
-            
+            if distance < 0:
+                break
+
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
             print("distance: ", distance)
 

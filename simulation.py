@@ -2,6 +2,8 @@ import pygame
 
 class Simulation:
     
+    COMPRESSION_STEP = 50
+
     def __init__(self):
         pass
     
@@ -15,23 +17,25 @@ class Simulation:
         min_x = min(positions_x)
         max_x = max(positions_x)
         for value in positions_x:
-            scaled_xs.append(1280*(value-min_x)/(max_x-min_x))
+            scaled_xs.append(1280 * (value-min_x) / (max_x-min_x))
 
         min_y = min(positions_y)
         max_y = max(positions_y)
         for value in positions_y:
-            scaled_ys.append(720 - 720*(value-min_y)/(max_y-min_y))
+            scaled_ys.append(720 - 720 * (value-min_y) / (max_y-min_y))
 
         return scaled_xs, scaled_ys
     
     def compress_arrays(self, positions_x, positions_y):
-        # Reduces the arrays by preserving 1 out of every 4 frames
+        """
+        Reduces the arrays by preserving 1 out of every 4 frames
+        """
         compressed_xs = []; compressed_ys = []
         i = 0
         while i < len(positions_x):
             compressed_xs.append(positions_x[i])
             compressed_ys.append(positions_y[i])
-            i+=3
+            i += self.COMPRESSION_STEP
 
         return compressed_xs, compressed_ys
 
