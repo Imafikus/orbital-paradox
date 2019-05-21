@@ -132,9 +132,7 @@ class OrbitalParadox():
 
                 
             #? If we have hit the surface, we don't want to run simulation anymore
-            if distance < 0 :
-                break
-
+            
             distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
             print("distance: ", distance)
 
@@ -166,6 +164,7 @@ class OrbitalParadox():
         Plots the position of the satelite  
         """
         plt.plot(self.xs, self.ys)
+        plt.axis("equal")
         plt.xlabel("x")
         plt.ylabel("y")
         plt.show()
@@ -176,6 +175,7 @@ class OrbitalParadox():
         Plots the height change through time
         """ 
         plt.plot(self.time_stamps, self.heights)
+        plt.axis("equal")
         plt.xlabel("time (s)")
         plt.ylabel("height (m)")
         plt.show()

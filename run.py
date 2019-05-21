@@ -3,9 +3,10 @@ from simulation import Simulation
 
 def main():    
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR / 500
-    op.main_loop(time_period, True, False)
-
+    time_period = op.C_SECONDS_IN_YEAR / 200
+    op.main_loop(time_period, include_drag_force = True, adjust_height = False)
+    op.plot_coordinates()
+    
     sim = Simulation()
 
     x, y = op.get_coordinates_arrays()

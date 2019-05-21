@@ -64,9 +64,6 @@ class Simulation:
             position_x = int(x[i])
             position_y = int(y[i])
             
-            # print('x:' + str(position_x))
-            # print('y:' + str(position_y))
-            
             pygame.display.update()
             clock.tick(60)
             
