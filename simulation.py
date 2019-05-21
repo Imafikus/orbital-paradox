@@ -7,8 +7,9 @@ class Simulation:
     
     def arrays_scaled_to_fit_screen(self, positions_x, positions_y):
         """
-        Scale arrays to fit the screen
-        #TODO needs better comments
+        First we normalize the array to fit the [0, 1] segment and then stretch it
+        to fit our 1280x720 screen;
+        Since pygame has it's y coordinates upside down, we too have to inverse our y coords.
         """
         scaled_xs = []; scaled_ys = []
         min_x = min(positions_x)
@@ -24,40 +25,35 @@ class Simulation:
         return scaled_xs, scaled_ys
     
     def compress_arrays(self, positions_x, positions_y):
-        """
-        Reduces the arrays to better fit the screen
-        #TODO Needs better comments
-        """
+        # Reduces the arrays by preserving 1 out of every 4 frames
         compressed_xs = []; compressed_ys = []
         i = 0
         while i < len(positions_x):
             compressed_xs.append(positions_x[i])
             compressed_ys.append(positions_y[i])
-            i+=50
+            i+=3
 
         return compressed_xs, compressed_ys
 
     def start_loop(self, x, y):
-        """
-        Starts the simulation given the x and y arrays of coordinates
-        """
+        # Starts the simulation given the x and y arrays of coordinates
         pygame.init()
         clock = pygame.time.Clock()
 
         white = (255,255,255)
         black = (0,0,0)
 
-        gameDisplay = pygame.display.set_mode((1280,720))
+        game_display = pygame.display.set_mode((1280,720))
         pygame.display.set_caption('Orbital paradox')
 
         position_x = 0
         position_y = 0
 
         i = 0
-        simulationExit = False
-        while not simulationExit:
-            gameDisplay.fill(black)
-            pygame.draw.circle(gameDisplay, white, [position_x, position_y], 10)
+        simulation_exit = False
+        while not simulation_exit:
+            game_display.fill(black)
+            pygame.draw.circle(game_display, white, [position_x, position_y], 10)
             
             i = (i + 1) % len(x)
             
@@ -69,7 +65,7 @@ class Simulation:
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    simulationExit = True
+                    simulation_exit = True
 
         pygame.quit()
         quit()
