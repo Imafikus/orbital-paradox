@@ -5,44 +5,45 @@ class OrbitalParadox():
     """
     Class used to describe Orbital Paradox
     """
-
-    #? Air densisty
-    C_Ro = 1.23 #kg/m3
-
-    #? Drag coefficient for satelites
-    C_Cd = 2.2
-
-    #? Cross-section area of the satelite (bus size used)
-    C_Area = 10 * 3 #m2
-
-    #? Starting height, used for calculating changing density of the atmosphere
-    C_H = 5_500 #m
-
-    #? Mass of the Earth
-    C_M_EARTH =  5.972 * 10**24 #kg
-
-    #? Radius of the earth
-    C_R_EARTH = 6_371_000.#m
-
-    #? Gravitational Constant
-    C_GAMMA = 6.67e-11
-
-    #? Euler constant
-    C_Euler = 2.71828
-
-    C_SECONDS_IN_YEAR = 365 * 86_400
-
-    #? indicates if the satelite needs height adjustment
-    C_CRITICAL_HEIGHT = 160_000.
-
-    C_SPEED_ADJUSTMENT = 1_000. #m/s
-
     def __init__(self):
+        #? Air densisty
+        self.C_Ro = 1.2255 #kg/m3
+
+        #? Drag coefficient for satelites
+        self.C_Cd = 2.0
+
+        #? Cross-section area of the satelite (bus size used)
+        self.C_Area = 10 * 3 #m2
+
+        #? Starting height, used for calculating changing density of the atmosphere
+        self.C_H = 7_500 #m
+
+        #? Mass of the Earth
+        self.C_M_EARTH =  5.972 * 10**24 #kg
+
+        #? Radius of the earth
+        self.C_R_EARTH = 6_371_000.#m
+
+        #? Gravitational Constant
+        self.C_GAMMA = 6.67e-11
+
+        #? Euler constant
+        self.C_Euler = 2.71828
+
+        self.C_SECONDS_IN_YEAR = 365 * 86_400
+
+        #? indicates if the satelite needs height adjustment
+        self.C_CRITICAL_HEIGHT = 160_000.
+
+        self.C_SPEED_ADJUSTMENT = 1_000. #m/s
+
         #? Starting time
         self.T = 0.
 
         #? time step
         self.dt = 1. #s
+
+        ###
         
         #? Starting x coordinate of the satelite
         self.x = 0.
@@ -91,9 +92,6 @@ class OrbitalParadox():
         """
         
         distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
-        # print("distance: ", distance)
-
-        speed_adjustment = 0
 
         while(self.T < end_time):
             
@@ -111,27 +109,26 @@ class OrbitalParadox():
             ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.x - Fd * self.vx
             
             #? Update y coordinate and y-axis speed component
-            self.y = self.y + self.vy * self.dt + ay * (self.dt**2 / 2)
+            self.y = self.y + self.vy * self.dt
             self.vy = self.vy + ay * self.dt
 
             #? Update x coordinate and x-axis speed component
-            self.x = self.x + self.vx * self.dt + ax * (self.dt**2 / 2)
+            self.x = self.x + self.vx * self.dt
             self.vx = self.vx + ax * self.dt
 
             #!FIXME#? Calculate current speed
             # if distance < self.C_CRITICAL_HEIGHT and adjust_height:
             #     self.vy = self.vy + self.C_SPEED_ADJUSTMENT
 
-            v = self.vx + self.vy
-            self.speed.append(v)
+            self.v = np.sqrt(self.vx**2 + self.vy**2)
 
             self.T = self.T + self.dt
                 
             #? If we have hit the surface, we don't want to run simulation anymore
-            if distance < 0:
+            if distance < 500:
                 break
 
-            distance = np.sqrt(self.x*self.x + self.y*self.y) - self.C_R_EARTH
+            distance = np.sqrt(self.x**2 + self.y**2) - self.C_R_EARTH
             print("distance: ", distance)
 
             self.time_stamps.append(self.T)
@@ -139,8 +136,8 @@ class OrbitalParadox():
             
             self.xs.append(self.x)
             self.ys.append(self.y)
-        
-    
+            self.speed.append(self.v)
+
     def reset_arrays(self):
         """
         Resets arrays all arrays to be empty
@@ -162,7 +159,6 @@ class OrbitalParadox():
         Plots the position of the satelite  
         """
         plt.plot(self.xs, self.ys)
-        plt.axis("equal")
         plt.xlabel("x")
         plt.ylabel("y")
         plt.show()
@@ -170,13 +166,24 @@ class OrbitalParadox():
 
     def plot_height_through_time(self):
         """
-        Plots the height change through time
+        Plot the height change through time
         """ 
         plt.plot(self.time_stamps, self.heights)
-        plt.axis("equal")
         plt.xlabel("time (s)")
         plt.ylabel("height (m)")
         plt.show()
+
+    def plot_speed_through_time(self):
+        """
+        Plot the speed change through time
+        """ 
+        plt.plot(self.time_stamps, self.speed)
+        plt.xlabel("time (s)")
+        plt.ylabel("speed (m/s)")
+        plt.show()
+
+        print(min(self.speed))
+        print(max(self.speed))
 
     def print_values():
         """
@@ -193,11 +200,12 @@ class OrbitalParadox():
 
 def main():
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR / 500
-    op.main_loop(time_period, False, False)
+    time_period = op.C_SECONDS_IN_YEAR / 100
+    op.main_loop(time_period, include_drag_force = True)
     
     op.plot_coordinates()
     op.plot_height_through_time()
+    op.plot_speed_through_time()
 
 if __name__ == "__main__":
     main()

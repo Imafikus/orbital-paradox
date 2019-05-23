@@ -40,7 +40,9 @@ class Simulation:
         return compressed_xs, compressed_ys
 
     def start_loop(self, x, y):
-        # Starts the simulation given the x and y arrays of coordinates
+        """"
+        Starts the simulation given the x and y arrays of coordinates
+        """
         pygame.init()
         clock = pygame.time.Clock()
 
