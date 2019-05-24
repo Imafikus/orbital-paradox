@@ -10,7 +10,7 @@ class OrbitalParadox():
         self.C_Ro = 1.2255 #kg/m3
 
         #? Drag coefficient for satelites
-        self.C_Cd = 2.0
+        self.C_Cd = 20.0
 
         #? Cross-section area of the satelite (bus size used)
         self.C_Area = 10 * 3 #m2
@@ -41,7 +41,7 @@ class OrbitalParadox():
         self.T = 0.
 
         #? time step
-        self.dt = 1. #s
+        self.dt = 0.01 #s
 
         ###
         
@@ -124,10 +124,6 @@ class OrbitalParadox():
 
             self.T = self.T + self.dt
                 
-            #? If we have hit the surface, we don't want to run simulation anymore
-            if distance < 500:
-                break
-
             distance = np.sqrt(self.x**2 + self.y**2) - self.C_R_EARTH
             print("distance: ", distance)
 
@@ -137,6 +133,10 @@ class OrbitalParadox():
             self.xs.append(self.x)
             self.ys.append(self.y)
             self.speed.append(self.v)
+
+            #? If we have hit the surface, we don't want to run simulation anymore
+            if distance < 0:
+                break
 
     def reset_arrays(self):
         """
@@ -200,7 +200,7 @@ class OrbitalParadox():
 
 def main():
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR / 100
+    time_period = op.C_SECONDS_IN_YEAR
     op.main_loop(time_period, include_drag_force = True)
     
     op.plot_coordinates()

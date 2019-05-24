@@ -3,7 +3,7 @@ from simulation import Simulation
 
 def main():    
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR / 200
+    time_period = op.C_SECONDS_IN_YEAR
     op.main_loop(time_period, include_drag_force = True)
 
     sim = Simulation()
