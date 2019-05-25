@@ -105,6 +105,7 @@ class OrbitalParadox():
             else:
                 Fd = 0
 
+            # Acceleration
             ay = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.y - Fd * self.vy
             ax = -self.C_GAMMA * self.C_M_EARTH * (self.x**2 + self.y**2)**(-3 / 2) * self.x - Fd * self.vx
             

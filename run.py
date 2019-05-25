@@ -10,7 +10,7 @@ def main():
 
     x, y = op.get_coordinates_arrays()
     x, y = sim.compress_arrays(x, y)
-    x, y = sim.arrays_scaled_to_fit_screen(x, y)
+    x, y = sim.scale_arrays_to_fit_screen(x, y)
 
     sim.start_loop(x, y)
 
