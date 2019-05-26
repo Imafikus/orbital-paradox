@@ -9,10 +9,10 @@ class OrbitalParadox():
         #? Air densisty
         self.C_Ro = 1.2255 #kg/m3
 
-        #? Drag coefficient for satelites
+        #? Drag coefficient for satellites
         self.C_Cd = 20.0
 
-        #? Cross-section area of the satelite (bus size used)
+        #? Cross-section area of the satellite (bus size used)
         self.C_Area = 10 * 3 #m2
 
         #? Starting height, used for calculating changing density of the atmosphere
@@ -32,7 +32,7 @@ class OrbitalParadox():
 
         self.C_SECONDS_IN_YEAR = 365 * 86_400
 
-        #? indicates if the satelite needs height adjustment
+        #? indicates if the satellite needs height adjustment
         self.C_CRITICAL_HEIGHT = 160_000.
 
         self.C_SPEED_ADJUSTMENT = 1_000. #m/s
@@ -45,16 +45,16 @@ class OrbitalParadox():
 
         ###
         
-        #? Starting x coordinate of the satelite
+        #? Starting x coordinate of the satellite
         self.x = 0.
 
-        #? Starting height of the satelite (y coordinate) from the Earth surface
+        #? Starting height of the satellite (y coordinate) from the Earth surface
         self.h = 200_000 #m
 
         #? Starting distance from the center of the Earth 
         self.y = self.h + self.C_R_EARTH #m
 
-        #? Starting orbital speed of the satelite (x component of the speed)
+        #? Starting orbital speed of the satellite (x component of the speed)
         self.vx = np.sqrt(self.C_GAMMA * self.C_M_EARTH / (self.y))
         
         #? starting y component of the speed
@@ -67,25 +67,25 @@ class OrbitalParadox():
         self.heights = []
         self.time_stamps = []
         
-        #? tracks the current coordinates of the satelite
+        #? tracks the current coordinates of the satellite
         self.xs = []
         self.ys = []
         self.speed = []
 
     def main_loop(self, end_time, include_drag_force, adjust_height = False):
         """
-        Calculates the trajectory of a satelite in 2D space.
+        Calculates the trajectory of a satellite in 2D space.
         Simulation is run until end_time is achieved.
 
         Function fills 4 arrays.
 
-        xs, ys are the coordinates of the satelite
-        time_stamps and heights are current time and height of the satelite
+        xs, ys are the coordinates of the satellite
+        time_stamps and heights are current time and height of the satellite
 
         include_drag_force just says whether we include the drag force, or not.
         It must be stated everytime
 
-        adjust_height indicates if satelite speeds up, in order not to fall
+        adjust_height indicates if satellite speeds up, in order not to fall
         
         adjust_height defaluts to false, we only need to explicitly state that 
         we want do height adjustment
@@ -150,14 +150,14 @@ class OrbitalParadox():
     
     def get_coordinates_arrays(self):
         """
-        Returns arrays for x and y coordinates of the satelite
+        Returns arrays for x and y coordinates of the satellite
         """
         return self.xs, self.ys
 
 
     def plot_coordinates(self):
         """
-        Plots the position of the satelite  
+        Plots the position of the satellite  
         """
         plt.plot(self.xs, self.ys)
         plt.xlabel("x")
