@@ -154,6 +154,24 @@ class OrbitalParadox():
         """
         return self.xs, self.ys
 
+    def get_C_H(self):
+        return self.C_H
+
+    def set_C_H(self):
+        return self.C_H
+
+    def get_h(self):
+        return self.h
+
+    def set_h(self):
+        return self.h
+
+    def get_dt(self):
+        return self.dt
+
+    def set_dt(self):
+        return self.dt
+
 
     def plot_coordinates(self):
         """
@@ -209,4 +227,11 @@ def main():
     op.plot_speed_through_time()
 
 if __name__ == "__main__":
-    main()
+    
+    op = OrbitalParadox()
+    print(op.get_C_H())
+    print(op.get_h())
+    print(op.get_dt())
+    
+    
+    #main()
