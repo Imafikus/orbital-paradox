@@ -157,21 +157,20 @@ class OrbitalParadox():
     def get_C_H(self):
         return self.C_H
 
-    def set_C_H(self):
-        return self.C_H
+    def set_C_H(self, val):
+        self.C_H = val
 
     def get_h(self):
         return self.h
 
-    def set_h(self):
-        return self.h
+    def set_h(self, val):
+        self.h = val
 
     def get_dt(self):
         return self.dt
 
-    def set_dt(self):
-        return self.dt
-
+    def set_dt(self, val):
+        self.dt = val
 
     def plot_coordinates(self):
         """
@@ -181,7 +180,6 @@ class OrbitalParadox():
         plt.xlabel("x")
         plt.ylabel("y")
         plt.show()
-        
 
     def plot_height_through_time(self):
         """
@@ -229,9 +227,13 @@ def main():
 if __name__ == "__main__":
     
     op = OrbitalParadox()
-    print(op.get_C_H())
-    print(op.get_h())
-    print(op.get_dt())
+
+    # op.set_C_H("test")
+    # op.set_h("test")
+    # op.set_dt("test")
+
+    # print(op.get_C_H())
+    # print(op.get_h())
+    # print(op.get_dt())
     
-    
-    #main()
+    main()
