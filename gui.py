@@ -6,12 +6,11 @@ class orbitalParadoxGui:
     #? satellite surfaces approximations, all given in m2
     SAT_SURFACES_DICT = {
         "ISS": 74 * 110, 
-        "Hubble:": 13.2 * 4.2, 
-        "Voyager: ": 4 * 4,
+        "Hubble": 13.2 * 4.2, 
+        "Voyager": 4 * 4,
         "Space Horizon": 4
     }
     SAT_NAMES = ("ISS", "Hubble", "Voyager", "Space Horizon")
-
 
     def __init__(self):
         self.root = Tk()
@@ -59,7 +58,7 @@ class orbitalParadoxGui:
 
     def run(self):
         self.root.mainloop()
-    
+
     def start_simulation(self):
         """
         Gets the params from the input fields and starts the simulation if the input is correct
@@ -69,12 +68,13 @@ class orbitalParadoxGui:
         print("height val: ", self.height_txt.get())
         print("time period: ", self.time_period_txt.get())
         
-        sat_name = self.satellite_txt.get()
+        sat_name = self.satellite_txt.get().strip()
         print("Satellite name: ", sat_name)
         print("Satellite surface: ", self.SAT_SURFACES_DICT[sat_name])
 
 
 if __name__ == "__main__":
-    gui = orbitalParadoxGui()
+    
+    gui = orbitalParadoxGui()    
     gui.run()
     
