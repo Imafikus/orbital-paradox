@@ -1,11 +1,10 @@
 import pygame
 import numpy as np
 from pygame.locals import *
-from op import OrbitalParadox
 
 class Simulation:
     
-    COMPRESSION_STEP = int(24 * (1 / OrbitalParadox().dt))
+    COMPRESSION_STEP = 4000
 
     def __init__(self):
         pass
@@ -28,14 +27,11 @@ class Simulation:
         for value in positions_y:
             scaled_ys.append(480 - 480 * (value-min_y) / (max_y-min_y))
 
-        # Scaled earth radius is equal to initial_distance * (r / (r + h0))
-        # Import those numbers and calculate the initial distance
-        r = OrbitalParadox().C_R_EARTH; h0 = OrbitalParadox().h
-        self.scaled_earth_radius = (480 - 480 * (0-min_y) / (max_y-min_y) - scaled_ys[0]) * (r / (r+h0))
+        self.scaled_earth_radius = (480 - 480 * (0-min_y) / (max_y-min_y) - scaled_ys[0]) * 0.9659
 
-        # Translate earth and the satellite so that the center of earth is at [640, 360]
-        self.scaled_earth_center_x = 480 * (0-min_x) / (max_x-min_x)
-        self.scaled_earth_center_y = 480 - 480 * (0-min_y) / (max_y-min_y)
+        # Translate so that the center is at [640, 360]
+        self.scaled_earth_center_x = int(480 * (0-min_x) / (max_x-min_x))
+        self.scaled_earth_center_y = int(480 - 480 * (0-min_y) / (max_y-min_y))
         i = 0
         tx = np.abs(self.scaled_earth_center_x - 640)
         ty = np.abs(self.scaled_earth_center_y - 360)
@@ -66,10 +62,6 @@ class Simulation:
         """"
         Starts the simulation given the x and y arrays of coordinates
         """
-
-        x, y = self.compress_arrays(x, y)
-        x, y = self.scale_arrays_to_fit_screen(x, y)
-
         pygame.init()
         clock = pygame.time.Clock() # This is used to set the framerate
 
@@ -86,8 +78,8 @@ class Simulation:
         simulation_exit = False
         while not simulation_exit:
             game_display.fill(black)
-            pygame.draw.circle(game_display, white, [position_x, position_y], 5) # Satellite
-            pygame.draw.circle(game_display, blue, [int(self.scaled_earth_center_x), int(self.scaled_earth_center_y)], int(self.scaled_earth_radius)) # Planet
+            pygame.draw.circle(game_display, white, [position_x, position_y], 5) # Satelite
+            pygame.draw.circle(game_display, blue, [self.scaled_earth_center_x, self.scaled_earth_center_y], int(self.scaled_earth_radius)) # Planet
             
             i = (i + 1) % len(x) # Loop through the arrays
             
