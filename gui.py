@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import ttk
+import check_types as ct
+import op
 
 class orbitalParadoxGui:
 
@@ -72,6 +74,17 @@ class orbitalParadoxGui:
         sat_name = self.satellite_txt.get()
         print("Satellite name: ", sat_name)
         print("Satellite surface: ", self.SAT_SURFACES_DICT[sat_name])
+
+        simulation = op.OrbitalParadox()
+        simulation.main_loop(100_000, include_drag_force = True)
+
+    # def check_input
+    #     if not check_for_letters(self.name_txt.get()):
+    #             error_message += "Name must be alphabetical.\n"
+    #         #check email
+    #         if not check_email(self.email_txt.get()):
+    #             error_message += "Correct email must be given.\n"
+
 
 
 if __name__ == "__main__":
