@@ -13,7 +13,7 @@ class OrbitalParadox():
         self.C_Ro = 1.2255 #kg/m3
 
         #? Drag coefficient for satellites
-        self.C_Cd = 200.0
+        self.C_Cd = 22.2
 
         #? Cross-section area of the satellite (bus size used)
         self.C_Area = 10 * 3 #m2
@@ -34,11 +34,6 @@ class OrbitalParadox():
         self.C_Euler = 2.71828
 
         self.C_SECONDS_IN_YEAR = 365 * 86_400
-
-        #? indicates if the satellite needs height adjustment
-        self.C_CRITICAL_HEIGHT = 160_000.
-
-        self.C_SPEED_ADJUSTMENT = 1_000. #m/s
 
         #? Starting time
         self.T = 0.
@@ -120,10 +115,6 @@ class OrbitalParadox():
             self.x = self.x + self.vx * self.dt
             self.vx = self.vx + ax * self.dt
 
-            #!FIXME#? Calculate current speed
-            # if distance < self.C_CRITICAL_HEIGHT and adjust_height:
-            #     self.vy = self.vy + self.C_SPEED_ADJUSTMENT
-
             self.v = np.sqrt(self.vx**2 + self.vy**2)
 
             self.T = self.T + self.dt
@@ -141,15 +132,6 @@ class OrbitalParadox():
             #? If we have hit the surface, we don't want to run simulation anymore
             if distance < 0:
                 break
-
-    def reset_arrays(self):
-        """
-        Resets arrays all arrays to be empty
-        """
-        self.heights = []
-        self.time_stamps = []
-        self.xs = []
-        self.ys = []
     
     def get_coordinates_arrays(self):
         """
@@ -233,7 +215,7 @@ class OrbitalParadox():
 
 def main():
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR / 10
+    time_period = op.C_SECONDS_IN_YEAR / 5000
     op.main_loop(time_period, include_drag_force = False)
     
     op.plot_coordinates()
@@ -241,15 +223,4 @@ def main():
     op.plot_speed_through_time()
 
 if __name__ == "__main__":
-    
-    op = OrbitalParadox()
-
-    # op.set_C_H("test")
-    # op.set_h("test")
-    # op.set_dt("test")
-
-    # print(op.get_C_H())
-    # print(op.get_h())
-    # print(op.get_dt())
-    
     main()
