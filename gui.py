@@ -2,14 +2,15 @@ from tkinter import *
 from tkinter import ttk, messagebox
 import check_types as ct
 import op
+from simulation import Simulation
 
 class orbitalParadoxGui:
 
     #? satellite surfaces approximations, all given in m2
     SAT_SURFACES_DICT = {
         "ISS": 74 * 110, 
-        "Hubble:": 13.2 * 4.2, 
-        "Voyager: ": 4 * 4,
+        "Hubble": 13.2 * 4.2, 
+        "Voyager": 4 * 4,
         "Space Horizon": 4
     }
     SAT_NAMES = ("ISS", "Hubble", "Voyager", "Space Horizon")
@@ -98,6 +99,7 @@ class orbitalParadoxGui:
         sim = op.OrbitalParadox()
         sim.set_h(float(height))
         sim.set_C_Cd(float(cd))
+        sim.set_C_Area(float(self.SAT_SURFACES_DICT[sat_name]))
 
         print(type(sim.get_h()))
 
@@ -106,11 +108,13 @@ class orbitalParadoxGui:
         #? remove window after the simulation starts 
         self.root.destroy()
 
+        animate = Simulation()
+        x, y = sim.get_coordinates_arrays()
+        animate.start_loop(x, y)
+        
         sim.plot_coordinates()
         sim.plot_height_through_time()
         sim.plot_speed_through_time()
-
-        #messagebox.showinfo(message = "Simulation Completed!", title="Success", icon = "info")
 
     def check_input(self, height, time_period, cd):
         """

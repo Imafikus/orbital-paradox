@@ -66,6 +66,10 @@ class Simulation:
         """"
         Starts the simulation given the x and y arrays of coordinates
         """
+
+        x, y = self.compress_arrays(x, y)
+        x, y = self.scale_arrays_to_fit_screen(x, y)
+
         pygame.init()
         clock = pygame.time.Clock() # This is used to set the framerate
 

@@ -13,7 +13,7 @@ class OrbitalParadox():
         self.C_Ro = 1.2255 #kg/m3
 
         #? Drag coefficient for satellites
-        self.C_Cd = 20.0
+        self.C_Cd = 200.0
 
         #? Cross-section area of the satellite (bus size used)
         self.C_Area = 10 * 3 #m2
@@ -181,6 +181,12 @@ class OrbitalParadox():
     def set_C_Cd(self, val):
         self.C_Cd = val
     
+    def get_C_Area(self):
+        return self.C_Area
+
+    def set_C_Area(self, val):
+        self.C_Area = val
+    
 
     def plot_coordinates(self):
         """
@@ -227,8 +233,8 @@ class OrbitalParadox():
 
 def main():
     op = OrbitalParadox()
-    time_period = op.C_SECONDS_IN_YEAR
-    op.main_loop(time_period, include_drag_force = True)
+    time_period = op.C_SECONDS_IN_YEAR / 10
+    op.main_loop(time_period, include_drag_force = False)
     
     op.plot_coordinates()
     op.plot_height_through_time()
