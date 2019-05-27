@@ -175,6 +175,13 @@ class OrbitalParadox():
     def set_dt(self, val):
         self.dt = val
 
+    def get_C_Cd(self):
+        return self.C_Cd
+
+    def set_C_Cd(self, val):
+        self.C_Cd = val
+    
+
     def plot_coordinates(self):
         """
         Plots the position of the satellite  
